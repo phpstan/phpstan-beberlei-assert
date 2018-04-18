@@ -1,0 +1,5 @@
+services:
+	-
+		class: PHPStan\Type\BeberleiAssert\AssertTypeSpecifyingExtension
+		tags:
+			- phpstan.typeSpecifier.staticMethodTypeSpecifyingExtension
