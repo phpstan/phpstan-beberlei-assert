@@ -57,7 +57,9 @@ class AssertTypeSpecifyingExtensionTest extends \PHPStan\Testing\RuleTestCase
 	 */
 	public function getDynamicFunctionReturnTypeExtensions(): array
 	{
-		return [];
+		return [
+			new AssertThatFunctionDynamicReturnTypeExtension(),
+		];
 	}
 
 	public function testExtension(): void
@@ -226,6 +228,18 @@ class AssertTypeSpecifyingExtensionTest extends \PHPStan\Testing\RuleTestCase
 			[
 				'Variable $f is: array<string>',
 				145,
+			],
+			[
+				'Variable $assertThatFunction is: Assert\AssertionChain<mixed>',
+				148,
+			],
+			[
+				'Variable $assertThatNullOrFunction is: Assert\AssertionChain<mixed>-nullOr',
+				151,
+			],
+			[
+				'Variable $assertThatAllFunction is: Assert\AssertionChain<mixed>-all',
+				154,
 			],
 		]);
 	}

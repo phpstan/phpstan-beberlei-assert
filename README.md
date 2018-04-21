@@ -32,6 +32,8 @@ This extension specifies types of values passed to:
 
 `Assert::that`, `Assert::thatNullOr` and `Assert::thatAll` chaining methods are also supported.
 
+`Assert\that`, `Assert\thatNullOr` and `Assert\thatAll` functions are supported too.
+
 ## Usage
 
 To use this extension, require it in [Composer](https://getcomposer.org/):

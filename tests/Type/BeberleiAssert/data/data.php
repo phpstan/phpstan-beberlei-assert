@@ -110,7 +110,7 @@ class Foo
 		$ab;
 	}
 
-	public function doBar(?int $a, $b, $c, array $d, iterable $e)
+	public function doBar(?int $a, $b, $c, array $d, iterable $e, $g)
 	{
 		$that = Assert::that($a);
 		$that;
@@ -143,6 +143,15 @@ class Foo
 		$f = doFoo();
 		Assert::thatAll($f)->notNull();
 		$f;
+
+		$assertThatFunction = \Assert\that($g);
+		$assertThatFunction;
+
+		$assertThatNullOrFunction = \Assert\thatNullOr($g);
+		$assertThatNullOrFunction;
+
+		$assertThatAllFunction = \Assert\thatAll($g);
+		$assertThatAllFunction;
 	}
 
 }
