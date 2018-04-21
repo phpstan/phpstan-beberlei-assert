@@ -2,7 +2,7 @@
 
 namespace PHPStan\Type\BeberleiAssert;
 
-use Assert\Assertion;
+use Assert\{Assert, Assertion};
 
 class Foo
 {
@@ -108,6 +108,41 @@ class Foo
 
 		Assertion::allSubclassOf($ab, self::class);
 		$ab;
+	}
+
+	public function doBar(?int $a, $b, $c, array $d, iterable $e)
+	{
+		$that = Assert::that($a);
+		$that;
+
+		$thatOrNull = $that->notNull();
+		$thatOrNull;
+		$a;
+
+		$assertNullOr = Assert::that($b)->nullOr();
+		$assertNullOr;
+		$assertNullOr->string();
+		$b;
+
+		$assertNullOr2 = Assert::thatNullOr($c);
+		$assertNullOr2;
+		$assertNullOr2->string();
+		$c;
+
+		$assertAll = Assert::that($d)->all();
+		$assertAll;
+		$assertAll->string();
+		$d;
+
+		$assertAll2 = Assert::thatAll($e);
+		$assertAll2;
+		$assertAll2->string();
+		$e;
+
+		/** @var (string|null)[] $f */
+		$f = doFoo();
+		Assert::thatAll($f)->notNull();
+		$f;
 	}
 
 }

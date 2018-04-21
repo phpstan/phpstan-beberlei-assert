@@ -22,6 +22,44 @@ class AssertTypeSpecifyingExtensionTest extends \PHPStan\Testing\RuleTestCase
 		];
 	}
 
+	/**
+	 * @return \PHPStan\Type\MethodTypeSpecifyingExtension[]
+	 */
+	protected function getMethodTypeSpecifyingExtensions(): array
+	{
+		return [
+			new AssertionChainTypeSpecifyingExtension(),
+		];
+	}
+
+	/**
+	 * @return \PHPStan\Type\DynamicMethodReturnTypeExtension[]
+	 */
+	public function getDynamicMethodReturnTypeExtensions(): array
+	{
+		return [
+			new AssertionChainDynamicReturnTypeExtension(),
+		];
+	}
+
+	/**
+	 * @return \PHPStan\Type\DynamicStaticMethodReturnTypeExtension[]
+	 */
+	public function getDynamicStaticMethodReturnTypeExtensions(): array
+	{
+		return [
+			new AssertThatDynamicMethodReturnTypeExtension(),
+		];
+	}
+
+	/**
+	 * @return \PHPStan\Type\DynamicFunctionReturnTypeExtension[]
+	 */
+	public function getDynamicFunctionReturnTypeExtensions(): array
+	{
+		return [];
+	}
+
 	public function testExtension(): void
 	{
 		$this->analyse([__DIR__ . '/data/data.php'], [
@@ -140,6 +178,54 @@ class AssertTypeSpecifyingExtensionTest extends \PHPStan\Testing\RuleTestCase
 			[
 				'Variable $ab is: array<PHPStan\Type\BeberleiAssert\Foo>',
 				110,
+			],
+			[
+				'Variable $that is: Assert\AssertionChain<int|null>',
+				116,
+			],
+			[
+				'Variable $thatOrNull is: Assert\AssertionChain<int|null>',
+				119,
+			],
+			[
+				'Variable $a is: int',
+				120,
+			],
+			[
+				'Variable $assertNullOr is: Assert\AssertionChain<mixed>-nullOr',
+				123,
+			],
+			[
+				'Variable $b is: string|null',
+				125,
+			],
+			[
+				'Variable $assertNullOr2 is: Assert\AssertionChain<mixed>-nullOr',
+				128,
+			],
+			[
+				'Variable $c is: string|null',
+				130,
+			],
+			[
+				'Variable $assertAll is: Assert\AssertionChain<array>-all',
+				133,
+			],
+			[
+				'Variable $d is: array<string>',
+				135,
+			],
+			[
+				'Variable $assertAll2 is: Assert\AssertionChain<iterable>-all',
+				138,
+			],
+			[
+				'Variable $e is: iterable<string>',
+				140,
+			],
+			[
+				'Variable $f is: array<string>',
+				145,
 			],
 		]);
 	}
