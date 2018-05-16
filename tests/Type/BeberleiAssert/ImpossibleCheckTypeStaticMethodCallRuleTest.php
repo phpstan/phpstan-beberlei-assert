@@ -10,7 +10,7 @@ class ImpossibleCheckTypeStaticMethodCallRuleTest extends \PHPStan\Testing\RuleT
 
 	protected function getRule(): Rule
 	{
-		return new ImpossibleCheckTypeStaticMethodCallRule(true);
+		return new ImpossibleCheckTypeStaticMethodCallRule($this->getTypeSpecifier(), true);
 	}
 
 	/**

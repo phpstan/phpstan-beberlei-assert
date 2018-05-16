@@ -4,6 +4,7 @@ namespace PHPStan\Type\BeberleiAssert;
 
 use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\FunctionReflection;
+use PHPStan\Reflection\ParametersAcceptorSelector;
 
 class AssertThatFunctionDynamicReturnTypeExtension implements \PHPStan\Type\DynamicFunctionReturnTypeExtension
 {
@@ -26,7 +27,9 @@ class AssertThatFunctionDynamicReturnTypeExtension implements \PHPStan\Type\Dyna
 	): \PHPStan\Type\Type
 	{
 		if (count($functionCall->args) === 0) {
-			return $functionReflection->getReturnType();
+			return ParametersAcceptorSelector::selectSingle(
+				$functionReflection->getVariants()
+			)->getReturnType();
 		}
 
 		$valueExpr = $functionCall->args[0]->value;
