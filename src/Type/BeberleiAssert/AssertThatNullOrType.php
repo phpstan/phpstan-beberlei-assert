@@ -20,7 +20,7 @@ class AssertThatNullOrType extends ObjectType
 		Type $valueType
 	)
 	{
-		parent::__construct(\Assert\AssertionChain::class);
+		parent::__construct('Assert\AssertionChain');
 		$this->valueExpr = $valueExpr;
 		$this->valueType = $valueType;
 	}

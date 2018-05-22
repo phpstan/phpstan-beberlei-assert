@@ -23,7 +23,7 @@ class AssertionChainTypeSpecifyingExtension implements MethodTypeSpecifyingExten
 
 	public function getClass(): string
 	{
-		return \Assert\AssertionChain::class;
+		return 'Assert\AssertionChain';
 	}
 
 	public function isMethodSupported(
