@@ -24,7 +24,7 @@ class AssertTypeSpecifyingExtension implements StaticMethodTypeSpecifyingExtensi
 
 	public function getClass(): string
 	{
-		return \Assert\Assertion::class;
+		return 'Assert\Assertion';
 	}
 
 	public function isStaticMethodSupported(

@@ -11,7 +11,7 @@ class AssertionChainDynamicReturnTypeExtension implements \PHPStan\Type\DynamicM
 
 	public function getClass(): string
 	{
-		return \Assert\AssertionChain::class;
+		return 'Assert\AssertionChain';
 	}
 
 	public function isMethodSupported(MethodReflection $methodReflection): bool

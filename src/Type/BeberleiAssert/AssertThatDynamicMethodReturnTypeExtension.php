@@ -9,7 +9,7 @@ class AssertThatDynamicMethodReturnTypeExtension implements \PHPStan\Type\Dynami
 
 	public function getClass(): string
 	{
-		return \Assert\Assert::class;
+		return 'Assert\Assert';
 	}
 
 	public function isStaticMethodSupported(\PHPStan\Reflection\MethodReflection $methodReflection): bool
