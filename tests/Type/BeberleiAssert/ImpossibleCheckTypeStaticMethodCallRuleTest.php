@@ -2,6 +2,7 @@
 
 namespace PHPStan\Type\BeberleiAssert;
 
+use PHPStan\Rules\Comparison\ImpossibleCheckTypeHelper;
 use PHPStan\Rules\Comparison\ImpossibleCheckTypeStaticMethodCallRule;
 use PHPStan\Rules\Rule;
 
@@ -10,7 +11,7 @@ class ImpossibleCheckTypeStaticMethodCallRuleTest extends \PHPStan\Testing\RuleT
 
 	protected function getRule(): Rule
 	{
-		return new ImpossibleCheckTypeStaticMethodCallRule($this->getTypeSpecifier(), true);
+		return new ImpossibleCheckTypeStaticMethodCallRule(new ImpossibleCheckTypeHelper($this->getTypeSpecifier()), true);
 	}
 
 	/**
