@@ -46,8 +46,16 @@ class ImpossibleCheckTypeMethodCallRuleTest extends \PHPStan\Testing\RuleTestCas
 
 	public function testExtension(): void
 	{
-		self::markTestIncomplete('Does not work yet - needs to rework ImpossibleCheckType rules, dynamic return type extension now has priority when resolving return type.');
-		$this->analyse([__DIR__ . '/data/impossible-check.php'], []);
+		$this->analyse([__DIR__ . '/data/impossible-check.php'], [
+			[
+				'Call to method Assert\AssertionChain::string() will always evaluate to true.',
+				12,
+			],
+			[
+				'Call to method Assert\AssertionChain::string() will always evaluate to true.',
+				16,
+			],
+		]);
 	}
 
 }

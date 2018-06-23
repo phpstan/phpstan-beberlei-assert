@@ -11,7 +11,14 @@ class Foo
 	{
 		Assertion::string($a);
 		Assertion::allString($b);
-		Assertion::allString($b);
+	}
+
+	/**
+	 * @param string[] $strings
+	 */
+	public function doBar(array $strings)
+	{
+		Assertion::allString($strings);
 	}
 
 }

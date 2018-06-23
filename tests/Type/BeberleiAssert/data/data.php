@@ -96,9 +96,9 @@ class Foo
 		Assertion::notSame($y, 1);
 		$y;
 
-		$z = [1, 1, 1];
+		$z = [1, 2, 3];
 		if (doFoo()) {
-			$z = [-1, -1, -1];
+			$z = [-1, -2, -3];
 		}
 		Assertion::allNotSame($z, -1);
 		$z;

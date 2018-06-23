@@ -14,6 +14,7 @@ class ImpossibleCheckTypeStaticMethodCallRuleTest extends \PHPStan\Testing\RuleT
 		return new ImpossibleCheckTypeStaticMethodCallRule(new ImpossibleCheckTypeHelper($this->getTypeSpecifier()), true);
 	}
 
+
 	/**
 	 * @return \PHPStan\Type\StaticMethodTypeSpecifyingExtension[]
 	 */
@@ -33,7 +34,7 @@ class ImpossibleCheckTypeStaticMethodCallRuleTest extends \PHPStan\Testing\RuleT
 			],
 			[
 				'Call to static method Assert\Assertion::allString() with array<string> will always evaluate to true.',
-				14,
+				21,
 			],
 		]);
 	}

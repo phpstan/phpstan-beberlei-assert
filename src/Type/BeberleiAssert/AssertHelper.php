@@ -8,12 +8,15 @@ use PHPStan\Analyser\SpecifiedTypes;
 use PHPStan\Analyser\TypeSpecifier;
 use PHPStan\Analyser\TypeSpecifierContext;
 use PHPStan\Type\ArrayType;
+use PHPStan\Type\Constant\ConstantArrayType;
+use PHPStan\Type\Constant\ConstantArrayTypeBuilder;
 use PHPStan\Type\Constant\ConstantStringType;
 use PHPStan\Type\IterableType;
 use PHPStan\Type\MixedType;
 use PHPStan\Type\ObjectType;
 use PHPStan\Type\Type;
 use PHPStan\Type\TypeCombinator;
+use PHPStan\Type\TypeUtils;
 
 class AssertHelper
 {
@@ -92,7 +95,9 @@ class AssertHelper
 			reset($sureTypes);
 			$exprString = key($sureTypes);
 			$sureType = $sureTypes[$exprString];
-			return self::arrayOrIterable($typeSpecifier, $scope, $sureType[0], $sureType[1]);
+			return self::arrayOrIterable($typeSpecifier, $scope, $sureType[0], function () use ($sureType): Type {
+				return $sureType[1];
+			});
 		}
 		if (count($specifiedTypes->getSureNotTypes()) > 0) {
 			throw new \PHPStan\ShouldNotHappenException();
@@ -116,13 +121,13 @@ class AssertHelper
 	): SpecifiedTypes
 	{
 		if ($assertName === 'notNull') {
-			$expr = $args[0]->value;
-			$currentType = $scope->getType($expr);
 			return self::arrayOrIterable(
 				$typeSpecifier,
 				$scope,
-				$expr,
-				TypeCombinator::removeNull($currentType->getIterableValueType())
+				$args[0]->value,
+				function (Type $type): Type {
+					return TypeCombinator::removeNull($type);
+				}
 			);
 		} elseif ($assertName === 'notIsInstanceOf') {
 			$classType = $scope->getType($args[1]->value);
@@ -130,28 +135,24 @@ class AssertHelper
 				return new SpecifiedTypes([], []);
 			}
 
-			$expr = $args[0]->value;
-			$currentType = $scope->getType($expr);
+			$objectType = new ObjectType($classType->getValue());
 			return self::arrayOrIterable(
 				$typeSpecifier,
 				$scope,
-				$expr,
-				TypeCombinator::remove(
-					$currentType->getIterableValueType(),
-					new ObjectType($classType->getValue())
-				)
+				$args[0]->value,
+				function (Type $type) use ($objectType): Type {
+					return TypeCombinator::remove($type, $objectType);
+				}
 			);
 		} elseif ($assertName === 'notSame') {
-			$expr = $args[0]->value;
-			$currentType = $scope->getType($expr);
+			$valueType = $scope->getType($args[1]->value);
 			return self::arrayOrIterable(
 				$typeSpecifier,
 				$scope,
-				$expr,
-				TypeCombinator::remove(
-					$currentType->getIterableValueType(),
-					$scope->getType($args[1]->value)
-				)
+				$args[0]->value,
+				function (Type $type) use ($valueType): Type {
+					return TypeCombinator::remove($type, $valueType);
+				}
 			);
 		}
 
@@ -162,14 +163,29 @@ class AssertHelper
 		TypeSpecifier $typeSpecifier,
 		Scope $scope,
 		\PhpParser\Node\Expr $expr,
-		Type $type
+		\Closure $typeCallback
 	): SpecifiedTypes
 	{
 		$currentType = $scope->getType($expr);
-		if ((new ArrayType(new MixedType(), new MixedType()))->isSuperTypeOf($currentType)->yes()) {
-			$specifiedType = new ArrayType($currentType->getIterableKeyType(), $type);
+		$arrayTypes = TypeUtils::getArrays($currentType);
+		if (count($arrayTypes) > 0) {
+			$newArrayTypes = [];
+			foreach ($arrayTypes as $arrayType) {
+				if ($arrayType instanceof ConstantArrayType) {
+					$builder = ConstantArrayTypeBuilder::createEmpty();
+					foreach ($arrayType->getKeyTypes() as $i => $keyType) {
+						$valueType = $arrayType->getValueTypes()[$i];
+						$builder->setOffsetValueType($keyType, $typeCallback($valueType));
+					}
+					$newArrayTypes[] = $builder->getArray();
+				} else {
+					$newArrayTypes[] = new ArrayType($arrayType->getKeyType(), $typeCallback($arrayType->getItemType()));
+				}
+			}
+
+			$specifiedType = TypeCombinator::union(...$newArrayTypes);
 		} elseif ((new IterableType(new MixedType(), new MixedType()))->isSuperTypeOf($currentType)->yes()) {
-			$specifiedType = new IterableType($currentType->getIterableKeyType(), $type);
+			$specifiedType = new IterableType($currentType->getIterableKeyType(), $typeCallback($currentType->getIterableValueType()));
 		} else {
 			return new SpecifiedTypes([], []);
 		}
