@@ -174,7 +174,7 @@ class AssertTypeSpecifyingExtensionTest extends \PHPStan\Testing\RuleTestCase
 				104,
 			],
 			[
-				'Variable $aa is: PHPStan\Type\BeberleiAssert\Foo',
+				'Variable $aa is: PHPStan\Type\BeberleiAssert\Foo|string',
 				107,
 			],
 			[
