@@ -34,17 +34,24 @@ This extension specifies types of values passed to:
 
 `Assert\that`, `Assert\thatNullOr` and `Assert\thatAll` functions are supported too.
 
-## Usage
+
+## Installation
 
 To use this extension, require it in [Composer](https://getcomposer.org/):
 
-```bash
+```
 composer require --dev phpstan/phpstan-beberlei-assert
 ```
 
-And include extension.neon in your project's PHPStan config:
+If you also install [phpstan/extension-installer](https://github.com/phpstan/extension-installer) then you're all set!
+
+<details>
+  <summary>Manual installation</summary>
+
+If you don't want to use `phpstan/extension-installer`, include extension.neon in your project's PHPStan config:
 
 ```
 includes:
-	- vendor/phpstan/phpstan-beberlei-assert/extension.neon
+    - vendor/phpstan/phpstan-beberlei-assert/extension.neon
 ```
+</details>
