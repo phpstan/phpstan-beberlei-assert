@@ -7,6 +7,24 @@
 * [PHPStan](https://github.com/phpstan/phpstan)
 * [beberlei/assert](https://github.com/beberlei/assert)
 
+## Description
+
+The main scope of this extension is to help phpstan to detect the type of object after the `Assert\Assertion` validation.
+
+```php
+<?php declare(strict_types = 1);
+use Assert\Assertion;
+
+function demo(?int $a) {
+	// ...
+  
+	Assertion::integer($a);
+	// phpstan is now aware that $a can no longer be `null` at this point
+  
+	return ($a === 10);
+}
+```
+
 This extension specifies types of values passed to:
 
 * `Assertion::integer`
