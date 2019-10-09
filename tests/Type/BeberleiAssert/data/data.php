@@ -7,7 +7,7 @@ use Assert\{Assert, Assertion};
 class Foo
 {
 
-	public function doFoo($a, $b, array $c, iterable $d, $e, $f, $g, $h, $i, $j, $k, $l, $m, string $n, $p, $r, $s, ?int $t, ?int $u, $x, $aa, array $ab)
+	public function doFoo($a, $b, array $c, iterable $d, $e, $f, $g, $h, $i, $j, $k, $l, $m, string $n, $p, $r, $s, ?int $t, ?int $u, $x, $aa, array $ab, ?string $ac)
 	{
 		$a;
 
@@ -108,6 +108,9 @@ class Foo
 
 		Assertion::allSubclassOf($ab, self::class);
 		$ab;
+
+		Assertion::isJsonString($ac);
+		$ac;
 	}
 
 	public function doBar(?int $a, $b, $c, array $d, iterable $e, $g)

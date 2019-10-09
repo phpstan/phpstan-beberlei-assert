@@ -356,6 +356,12 @@ class AssertHelper
 						]
 					);
 				},
+				'isJsonString' => function (Scope $scope, Arg $value): \PhpParser\Node\Expr {
+					return new \PhpParser\Node\Expr\FuncCall(
+						new \PhpParser\Node\Name('is_string'),
+						[$value]
+					);
+				},
 			];
 		}
 

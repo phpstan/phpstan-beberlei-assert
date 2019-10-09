@@ -182,64 +182,68 @@ class AssertTypeSpecifyingExtensionTest extends \PHPStan\Testing\RuleTestCase
 				110,
 			],
 			[
-				'Variable $that is: Assert\AssertionChain<int|null>',
-				116,
+				'Variable $ac is: string',
+				113,
 			],
 			[
-				'Variable $thatOrNull is: Assert\AssertionChain<int|null>',
+				'Variable $that is: Assert\AssertionChain<int|null>',
 				119,
 			],
 			[
-				'Variable $a is: int',
-				120,
+				'Variable $thatOrNull is: Assert\AssertionChain<int|null>',
+				122,
 			],
 			[
-				'Variable $assertNullOr is: Assert\AssertionChain<mixed>-nullOr',
+				'Variable $a is: int',
 				123,
 			],
 			[
-				'Variable $b is: string|null',
-				125,
+				'Variable $assertNullOr is: Assert\AssertionChain<mixed>-nullOr',
+				126,
 			],
 			[
-				'Variable $assertNullOr2 is: Assert\AssertionChain<mixed>-nullOr',
+				'Variable $b is: string|null',
 				128,
 			],
 			[
-				'Variable $c is: string|null',
-				130,
+				'Variable $assertNullOr2 is: Assert\AssertionChain<mixed>-nullOr',
+				131,
 			],
 			[
-				'Variable $assertAll is: Assert\AssertionChain<array>-all',
+				'Variable $c is: string|null',
 				133,
 			],
 			[
-				'Variable $d is: array<string>',
-				135,
+				'Variable $assertAll is: Assert\AssertionChain<array>-all',
+				136,
 			],
 			[
-				'Variable $assertAll2 is: Assert\AssertionChain<iterable>-all',
+				'Variable $d is: array<string>',
 				138,
 			],
 			[
+				'Variable $assertAll2 is: Assert\AssertionChain<iterable>-all',
+				141,
+			],
+			[
 				'Variable $e is: iterable<string>',
-				140,
+				143,
 			],
 			[
 				'Variable $f is: array<string>',
-				145,
-			],
-			[
-				'Variable $assertThatFunction is: Assert\AssertionChain<mixed>',
 				148,
 			],
 			[
-				'Variable $assertThatNullOrFunction is: Assert\AssertionChain<mixed>-nullOr',
+				'Variable $assertThatFunction is: Assert\AssertionChain<mixed>',
 				151,
 			],
 			[
-				'Variable $assertThatAllFunction is: Assert\AssertionChain<mixed>-all',
+				'Variable $assertThatNullOrFunction is: Assert\AssertionChain<mixed>-nullOr',
 				154,
+			],
+			[
+				'Variable $assertThatAllFunction is: Assert\AssertionChain<mixed>-all',
+				157,
 			],
 		]);
 	}
