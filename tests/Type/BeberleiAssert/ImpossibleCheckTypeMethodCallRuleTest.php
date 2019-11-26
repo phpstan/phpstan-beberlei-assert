@@ -6,6 +6,9 @@ use PHPStan\Rules\Comparison\ImpossibleCheckTypeHelper;
 use PHPStan\Rules\Comparison\ImpossibleCheckTypeMethodCallRule;
 use PHPStan\Rules\Rule;
 
+/**
+ * @extends \PHPStan\Testing\RuleTestCase<ImpossibleCheckTypeMethodCallRule>
+ */
 class ImpossibleCheckTypeMethodCallRuleTest extends \PHPStan\Testing\RuleTestCase
 {
 

@@ -4,6 +4,9 @@ namespace PHPStan\Type\BeberleiAssert;
 
 use PHPStan\Rules\Rule;
 
+/**
+ * @extends \PHPStan\Testing\RuleTestCase<VariableTypeReportingRule>
+ */
 class AssertTypeSpecifyingExtensionTest extends \PHPStan\Testing\RuleTestCase
 {
 
@@ -174,11 +177,11 @@ class AssertTypeSpecifyingExtensionTest extends \PHPStan\Testing\RuleTestCase
 				104,
 			],
 			[
-				'Variable $aa is: PHPStan\Type\BeberleiAssert\Foo|string',
+				'Variable $aa is: class-string<PHPStan\Type\BeberleiAssert\Foo>|PHPStan\Type\BeberleiAssert\Foo',
 				107,
 			],
 			[
-				'Variable $ab is: array<PHPStan\Type\BeberleiAssert\Foo>',
+				'Variable $ab is: array', // should be array<PHPStan\Type\BeberleiAssert\Foo>
 				110,
 			],
 			[
