@@ -1,6 +1,6 @@
 # PHPStan beberlei/assert extension
 
-[![Build Status](https://travis-ci.org/phpstan/phpstan-beberlei-assert.svg)](https://travis-ci.org/phpstan/phpstan-beberlei-assert)
+[![Build Status](https://travis-ci.com/phpstan/phpstan-beberlei-assert.svg?branch=master)](https://travis-ci.com/phpstan/phpstan-beberlei-assert)
 [![Latest Stable Version](https://poser.pugx.org/phpstan/phpstan-beberlei-assert/v/stable)](https://packagist.org/packages/phpstan/phpstan-beberlei-assert)
 [![License](https://poser.pugx.org/phpstan/phpstan-beberlei-assert/license)](https://packagist.org/packages/phpstan/phpstan-beberlei-assert)
 
