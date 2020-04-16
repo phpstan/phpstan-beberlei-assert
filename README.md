@@ -4,7 +4,7 @@
 [![Latest Stable Version](https://poser.pugx.org/phpstan/phpstan-beberlei-assert/v/stable)](https://packagist.org/packages/phpstan/phpstan-beberlei-assert)
 [![License](https://poser.pugx.org/phpstan/phpstan-beberlei-assert/license)](https://packagist.org/packages/phpstan/phpstan-beberlei-assert)
 
-* [PHPStan](https://github.com/phpstan/phpstan)
+* [PHPStan](https://phpstan.org/)
 * [beberlei/assert](https://github.com/beberlei/assert)
 
 ## Description
