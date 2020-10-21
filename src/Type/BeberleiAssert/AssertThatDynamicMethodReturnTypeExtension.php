@@ -33,7 +33,9 @@ class AssertThatDynamicMethodReturnTypeExtension implements \PHPStan\Type\Dynami
 		$type = new AssertThatType($valueExpr, $scope->getType($valueExpr));
 		if ($methodReflection->getName() === 'thatNullOr') {
 			return $type->toNullOr();
-		} elseif ($methodReflection->getName() === 'thatAll') {
+		}
+
+		if ($methodReflection->getName() === 'thatAll') {
 			return $type->toAll();
 		}
 
