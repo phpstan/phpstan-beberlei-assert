@@ -32,7 +32,9 @@ class AssertionChainDynamicReturnTypeExtension implements \PHPStan\Type\DynamicM
 
 		if ($methodReflection->getName() === 'all') {
 			return $type->toAll();
-		} elseif ($methodReflection->getName() === 'nullOr') {
+		}
+
+		if ($methodReflection->getName() === 'nullOr') {
 			return $type->toNullOr();
 		}
 

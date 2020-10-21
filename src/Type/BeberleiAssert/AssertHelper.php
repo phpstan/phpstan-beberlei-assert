@@ -129,7 +129,9 @@ class AssertHelper
 					return TypeCombinator::removeNull($type);
 				}
 			);
-		} elseif ($assertName === 'notIsInstanceOf') {
+		}
+
+		if ($assertName === 'notIsInstanceOf') {
 			$classType = $scope->getType($args[1]->value);
 			if (!$classType instanceof ConstantStringType) {
 				return new SpecifiedTypes([], []);
@@ -144,7 +146,9 @@ class AssertHelper
 					return TypeCombinator::remove($type, $objectType);
 				}
 			);
-		} elseif ($assertName === 'notSame') {
+		}
+
+		if ($assertName === 'notSame') {
 			$valueType = $scope->getType($args[1]->value);
 			return self::arrayOrIterable(
 				$typeSpecifier,
