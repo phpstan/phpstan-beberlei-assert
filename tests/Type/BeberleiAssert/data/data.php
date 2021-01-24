@@ -157,6 +157,16 @@ class Foo
 		$assertThatAllFunction;
 	}
 
+	public function doBaz(array $a): void
+	{
+		if (rand(0, 1)) {
+			$a = false;
+		}
+
+		Assertion::allIsInstanceOf($a, \stdClass::class);
+		$a;
+	}
+
 }
 
 class Bar

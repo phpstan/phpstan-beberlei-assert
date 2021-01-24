@@ -248,6 +248,10 @@ class AssertTypeSpecifyingExtensionTest extends \PHPStan\Testing\RuleTestCase
 				'Variable $assertThatAllFunction is: Assert\AssertionChain<mixed>-all',
 				157,
 			],
+			[
+				'Variable $a is: array<stdClass>',
+				167,
+			],
 		]);
 	}
 
