@@ -28,6 +28,7 @@ function demo(?int $a) {
 This extension specifies types of values passed to:
 
 * `Assertion::integer`
+* `Assertion::integerish`
 * `Assertion::string`
 * `Assertion::float`
 * `Assertion::numeric`
