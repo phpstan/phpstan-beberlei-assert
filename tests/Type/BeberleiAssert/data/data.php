@@ -167,6 +167,11 @@ class Foo
 		$a;
 	}
 
+	public function doFooBar($a): void
+	{
+		Assertion::integerish($a);
+		$a;
+	}
 }
 
 class Bar

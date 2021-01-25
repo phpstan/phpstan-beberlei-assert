@@ -366,6 +366,12 @@ class AssertHelper
 						[$value]
 					);
 				},
+				'integerish' => function (Scope $scope, Arg $value): \PhpParser\Node\Expr {
+					return new \PhpParser\Node\Expr\FuncCall(
+						new \PhpParser\Node\Name('is_numeric'),
+						[$value]
+					);
+				},
 			];
 		}
 
