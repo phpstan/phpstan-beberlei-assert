@@ -252,6 +252,10 @@ class AssertTypeSpecifyingExtensionTest extends \PHPStan\Testing\RuleTestCase
 				'Variable $a is: array<stdClass>',
 				167,
 			],
+			[
+				'Variable $a is: float|int|(string&numeric)',
+				173,
+			],
 		]);
 	}
 
