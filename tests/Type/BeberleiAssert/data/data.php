@@ -9,82 +9,82 @@ class Foo
 
 	public function doFoo($a, $b, array $c, iterable $d, $e, $f, $g, $h, $i, $j, $k, $l, $m, string $n, $p, $r, $s, ?int $t, ?int $u, $x, $aa, array $ab, ?string $ac)
 	{
-		$a;
+		\PHPStan\Testing\assertType('mixed', $a);
 
 		Assertion::integer($a);
-		$a;
+		\PHPStan\Testing\assertType('int', $a);
 
 		Assertion::nullOrInteger($b);
-		$b;
+		\PHPStan\Testing\assertType('int|null', $b);
 
 		Assertion::allInteger($c);
-		$c;
+		\PHPStan\Testing\assertType('array<int>', $c);
 
 		Assertion::allInteger($d);
-		$d;
+		\PHPStan\Testing\assertType('iterable<int>', $d);
 
 		Assertion::string($e);
-		$e;
+		\PHPStan\Testing\assertType('string', $e);
 
 		Assertion::float($f);
-		$f;
+		\PHPStan\Testing\assertType('float', $f);
 
 		Assertion::numeric($g);
-		$g;
+		\PHPStan\Testing\assertType('float|int|(string&numeric)', $g);
 
 		Assertion::boolean($h);
-		$h;
+		\PHPStan\Testing\assertType('bool', $h);
 
 		Assertion::scalar($i);
-		$i;
+		\PHPStan\Testing\assertType('bool|float|int|string', $i);
 
 		Assertion::objectOrClass($j);
-		$j;
+		\PHPStan\Testing\assertType('object', $j);
 
 		Assertion::isResource($k);
-		$k;
+		\PHPStan\Testing\assertType('resource', $k);
 
 		Assertion::isCallable($l);
-		$l;
+		\PHPStan\Testing\assertType('callable(): mixed', $l);
 
 		Assertion::isArray($m);
-		$m;
+		\PHPStan\Testing\assertType('array', $m);
 
 		Assertion::objectOrClass($n);
-		$n;
+		\PHPStan\Testing\assertType('string', $n);
 
 		Assertion::isInstanceOf($p, self::class);
-		$p;
+		\PHPStan\Testing\assertType(self::class, $p);
 
 		/** @var Foo|Bar $q */
 		$q = doFoo();
 		Assertion::notIsInstanceOf($q, Bar::class);
-		$q;
+		\PHPStan\Testing\assertType(Foo::class, $q);
 
 		Assertion::true($r);
-		$r;
+		\PHPStan\Testing\assertType('true', $r);
 
 		Assertion::false($s);
-		$s;
+		\PHPStan\Testing\assertType('false', $s);
 
 		Assertion::null($t);
-		$t;
+		\PHPStan\Testing\assertType('null', $t);
 
 		Assertion::notNull($u);
-		$u;
+		\PHPStan\Testing\assertType('int', $u);
 
 		/** @var (Foo|Bar)[] $v */
 		$v = doFoo();
 		Assertion::allNotIsInstanceOf($v, Bar::class);
-		$v;
+		\PHPStan\Testing\assertType('array<PHPStan\Type\BeberleiAssert\Foo>', $v);
 
 		/** @var (int|null)[] $w */
 		$w = doFoo();
 		Assertion::allNotNull($w);
-		$w;
+		\PHPStan\Testing\assertType('array<int>', $w);
 
 		Assertion::same($x, 1);
-		$x;
+		\PHPStan\Testing\assertType('1', $x);
 
 		if (doFoo()) {
 			$y = 1;
@@ -92,69 +92,69 @@ class Foo
 			$y = -1;
 		}
 
-		$y;
+		\PHPStan\Testing\assertType('-1|1', $y);
 		Assertion::notSame($y, 1);
-		$y;
+		\PHPStan\Testing\assertType('-1', $y);
 
 		$z = [1, 2, 3];
 		if (doFoo()) {
 			$z = [-1, -2, -3];
 		}
 		Assertion::allNotSame($z, -1);
-		$z;
+		\PHPStan\Testing\assertType('array(1, -2|2, -3|3)', $z);
 
 		Assertion::subclassOf($aa, self::class);
-		$aa;
+		\PHPStan\Testing\assertType('class-string<PHPStan\Type\BeberleiAssert\Foo>|PHPStan\Type\BeberleiAssert\Foo', $aa);
 
 		Assertion::allSubclassOf($ab, self::class);
-		$ab;
+		\PHPStan\Testing\assertType('array<*NEVER*>', $ab); // // should be array<PHPStan\Type\BeberleiAssert\Foo>
 
 		Assertion::isJsonString($ac);
-		$ac;
+		\PHPStan\Testing\assertType('string', $ac);
 	}
 
 	public function doBar(?int $a, $b, $c, array $d, iterable $e, $g)
 	{
 		$that = Assert::that($a);
-		$that;
+		\PHPStan\Testing\assertType('Assert\AssertionChain<int|null>', $that);
 
 		$thatOrNull = $that->notNull();
-		$thatOrNull;
-		$a;
+		\PHPStan\Testing\assertType('Assert\AssertionChain<int|null>', $thatOrNull);
+		\PHPStan\Testing\assertType('int', $a);
 
 		$assertNullOr = Assert::that($b)->nullOr();
-		$assertNullOr;
+		\PHPStan\Testing\assertType('Assert\AssertionChain<mixed>-nullOr', $assertNullOr);
 		$assertNullOr->string();
-		$b;
+		\PHPStan\Testing\assertType('string|null', $b);
 
 		$assertNullOr2 = Assert::thatNullOr($c);
-		$assertNullOr2;
+		\PHPStan\Testing\assertType('Assert\AssertionChain<mixed>-nullOr', $assertNullOr2);
 		$assertNullOr2->string();
-		$c;
+		\PHPStan\Testing\assertType('string|null', $c);
 
 		$assertAll = Assert::that($d)->all();
-		$assertAll;
+		\PHPStan\Testing\assertType('Assert\AssertionChain<array>-all', $assertAll);
 		$assertAll->string();
-		$d;
+		\PHPStan\Testing\assertType('array<string>', $d);
 
 		$assertAll2 = Assert::thatAll($e);
-		$assertAll2;
+		\PHPStan\Testing\assertType('Assert\AssertionChain<array>-all', $assertAll);
 		$assertAll2->string();
-		$e;
+		\PHPStan\Testing\assertType('iterable<string>', $e);
 
 		/** @var (string|null)[] $f */
 		$f = doFoo();
 		Assert::thatAll($f)->notNull();
-		$f;
+		\PHPStan\Testing\assertType('array<string>', $f);
 
 		$assertThatFunction = \Assert\that($g);
-		$assertThatFunction;
+		\PHPStan\Testing\assertType('Assert\AssertionChain<mixed>', $assertThatFunction);
 
 		$assertThatNullOrFunction = \Assert\thatNullOr($g);
-		$assertThatNullOrFunction;
+		\PHPStan\Testing\assertType('Assert\AssertionChain<mixed>-nullOr', $assertThatNullOrFunction);
 
 		$assertThatAllFunction = \Assert\thatAll($g);
-		$assertThatAllFunction;
+		\PHPStan\Testing\assertType('Assert\AssertionChain<mixed>-all', $assertThatAllFunction);
 	}
 
 	public function doBaz(array $a): void
@@ -164,13 +164,13 @@ class Foo
 		}
 
 		Assertion::allIsInstanceOf($a, \stdClass::class);
-		$a;
+		\PHPStan\Testing\assertType('array<stdClass>', $a);
 	}
 
 	public function doFooBar($a): void
 	{
 		Assertion::integerish($a);
-		$a;
+		\PHPStan\Testing\assertType('float|int|(string&numeric)', $a);
 	}
 }
 
