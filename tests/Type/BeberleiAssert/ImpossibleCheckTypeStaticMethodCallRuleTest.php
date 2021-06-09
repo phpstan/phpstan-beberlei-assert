@@ -2,7 +2,6 @@
 
 namespace PHPStan\Type\BeberleiAssert;
 
-use PHPStan\Rules\Comparison\ImpossibleCheckTypeHelper;
 use PHPStan\Rules\Comparison\ImpossibleCheckTypeStaticMethodCallRule;
 use PHPStan\Rules\Rule;
 
@@ -14,18 +13,7 @@ class ImpossibleCheckTypeStaticMethodCallRuleTest extends \PHPStan\Testing\RuleT
 
 	protected function getRule(): Rule
 	{
-		return new ImpossibleCheckTypeStaticMethodCallRule(new ImpossibleCheckTypeHelper($this->createBroker(), $this->getTypeSpecifier(), [], true), true, true);
-	}
-
-
-	/**
-	 * @return \PHPStan\Type\StaticMethodTypeSpecifyingExtension[]
-	 */
-	protected function getStaticMethodTypeSpecifyingExtensions(): array
-	{
-		return [
-			new AssertTypeSpecifyingExtension(),
-		];
+		return self::getContainer()->getByType(ImpossibleCheckTypeStaticMethodCallRule::class);
 	}
 
 	public function testExtension(): void
@@ -41,6 +29,14 @@ class ImpossibleCheckTypeStaticMethodCallRuleTest extends \PHPStan\Testing\RuleT
 				'Because the type is coming from a PHPDoc, you can turn off this check by setting <fg=cyan>treatPhpDocTypesAsCertain: false</> in your <fg=cyan>%configurationFile%</>.',
 			],
 		]);
+	}
+
+	public static function getAdditionalConfigFiles(): array
+	{
+		return [
+			__DIR__ . '/../../../extension.neon',
+			__DIR__ . '/../../../vendor/phpstan/phpstan-strict-rules/rules.neon',
+		];
 	}
 
 }
