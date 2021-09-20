@@ -40,11 +40,11 @@ class AssertTypeSpecifyingExtension implements StaticMethodTypeSpecifyingExtensi
 				'allNotSame' => 2,
 			];
 			return array_key_exists($staticMethodReflection->getName(), $methods)
-				&& count($node->args) >= $methods[$staticMethodReflection->getName()];
+				&& count($node->getArgs()) >= $methods[$staticMethodReflection->getName()];
 		}
 
 		$trimmedName = self::trimName($staticMethodReflection->getName());
-		return AssertHelper::isSupported($trimmedName, $node->args);
+		return AssertHelper::isSupported($trimmedName, $node->getArgs());
 	}
 
 	private static function trimName(string $name): string
@@ -71,7 +71,7 @@ class AssertTypeSpecifyingExtension implements StaticMethodTypeSpecifyingExtensi
 				$this->typeSpecifier,
 				$scope,
 				lcfirst(substr($staticMethodReflection->getName(), 3)),
-				$node->args
+				$node->getArgs()
 			);
 		}
 
@@ -79,7 +79,7 @@ class AssertTypeSpecifyingExtension implements StaticMethodTypeSpecifyingExtensi
 			$this->typeSpecifier,
 			$scope,
 			self::trimName($staticMethodReflection->getName()),
-			$node->args,
+			$node->getArgs(),
 			substr($staticMethodReflection->getName(), 0, 6) === 'nullOr'
 		);
 

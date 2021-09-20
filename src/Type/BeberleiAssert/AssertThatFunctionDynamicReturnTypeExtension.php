@@ -26,13 +26,13 @@ class AssertThatFunctionDynamicReturnTypeExtension implements \PHPStan\Type\Dyna
 		Scope $scope
 	): \PHPStan\Type\Type
 	{
-		if (count($functionCall->args) === 0) {
+		if (count($functionCall->getArgs()) === 0) {
 			return ParametersAcceptorSelector::selectSingle(
 				$functionReflection->getVariants()
 			)->getReturnType();
 		}
 
-		$valueExpr = $functionCall->args[0]->value;
+		$valueExpr = $functionCall->getArgs()[0]->value;
 		$type = new AssertThatType($valueExpr, $scope->getType($valueExpr));
 		if ($functionReflection->getName() === 'Assert\\thatNullOr') {
 			return $type->toNullOr();

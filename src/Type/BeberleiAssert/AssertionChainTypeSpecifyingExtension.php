@@ -36,7 +36,7 @@ class AssertionChainTypeSpecifyingExtension implements MethodTypeSpecifyingExten
 			$methodReflection->getName(),
 			array_merge(
 				[new \PhpParser\Node\Arg(new \PhpParser\Node\Scalar\LNumber(1))],
-				$node->args
+				$node->getArgs()
 			)
 		);
 	}
@@ -58,7 +58,7 @@ class AssertionChainTypeSpecifyingExtension implements MethodTypeSpecifyingExten
 
 		$args = array_merge([
 			new \PhpParser\Node\Arg($calledOnType->getValueExpr()),
-		], $node->args);
+		], $node->getArgs());
 
 		if (
 			$calledOnType instanceof AssertThatAllType

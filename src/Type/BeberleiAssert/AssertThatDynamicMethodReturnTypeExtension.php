@@ -23,13 +23,13 @@ class AssertThatDynamicMethodReturnTypeExtension implements \PHPStan\Type\Dynami
 
 	public function getTypeFromStaticMethodCall(\PHPStan\Reflection\MethodReflection $methodReflection, \PhpParser\Node\Expr\StaticCall $methodCall, \PHPStan\Analyser\Scope $scope): \PHPStan\Type\Type
 	{
-		if (count($methodCall->args) === 0) {
+		if (count($methodCall->getArgs()) === 0) {
 			return ParametersAcceptorSelector::selectSingle(
 				$methodReflection->getVariants()
 			)->getReturnType();
 		}
 
-		$valueExpr = $methodCall->args[0]->value;
+		$valueExpr = $methodCall->getArgs()[0]->value;
 		$type = new AssertThatType($valueExpr, $scope->getType($valueExpr));
 		if ($methodReflection->getName() === 'thatNullOr') {
 			return $type->toNullOr();
