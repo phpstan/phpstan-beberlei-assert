@@ -30,7 +30,7 @@ class Foo
 		\PHPStan\Testing\assertType('float', $f);
 
 		Assertion::numeric($g);
-		\PHPStan\Testing\assertType('float|int|(string&numeric)', $g);
+		\PHPStan\Testing\assertType('float|int|numeric-string', $g);
 
 		Assertion::boolean($h);
 		\PHPStan\Testing\assertType('bool', $h);
@@ -101,7 +101,7 @@ class Foo
 			$z = [-1, -2, -3];
 		}
 		Assertion::allNotSame($z, -1);
-		\PHPStan\Testing\assertType('array(1, -2|2, -3|3)', $z);
+		\PHPStan\Testing\assertType('array{1, -2|2, -3|3}', $z);
 
 		Assertion::subclassOf($aa, self::class);
 		\PHPStan\Testing\assertType('class-string<PHPStan\Type\BeberleiAssert\Foo>|PHPStan\Type\BeberleiAssert\Foo', $aa);
@@ -170,7 +170,7 @@ class Foo
 	public function doFooBar($a): void
 	{
 		Assertion::integerish($a);
-		\PHPStan\Testing\assertType('float|int|(string&numeric)', $a);
+		\PHPStan\Testing\assertType('float|int|numeric-string', $a);
 	}
 }
 
