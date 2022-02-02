@@ -2,6 +2,9 @@
 
 namespace PHPStan\Type\BeberleiAssert;
 
+use PhpParser\Node\Arg;
+use PhpParser\Node\Expr\MethodCall;
+use PhpParser\Node\Scalar\LNumber;
 use PHPStan\Analyser\Scope;
 use PHPStan\Analyser\SpecifiedTypes;
 use PHPStan\Analyser\TypeSpecifier;
@@ -9,11 +12,13 @@ use PHPStan\Analyser\TypeSpecifierAwareExtension;
 use PHPStan\Analyser\TypeSpecifierContext;
 use PHPStan\Reflection\MethodReflection;
 use PHPStan\Type\MethodTypeSpecifyingExtension;
+use function array_merge;
+use function substr;
 
 class AssertionChainTypeSpecifyingExtension implements MethodTypeSpecifyingExtension, TypeSpecifierAwareExtension
 {
 
-	/** @var \PHPStan\Analyser\TypeSpecifier */
+	/** @var TypeSpecifier */
 	private $typeSpecifier;
 
 	public function setTypeSpecifier(TypeSpecifier $typeSpecifier): void
@@ -28,14 +33,14 @@ class AssertionChainTypeSpecifyingExtension implements MethodTypeSpecifyingExten
 
 	public function isMethodSupported(
 		MethodReflection $methodReflection,
-		\PhpParser\Node\Expr\MethodCall $node,
+		MethodCall $node,
 		TypeSpecifierContext $context
 	): bool
 	{
 		return AssertHelper::isSupported(
 			$methodReflection->getName(),
 			array_merge(
-				[new \PhpParser\Node\Arg(new \PhpParser\Node\Scalar\LNumber(1))],
+				[new Arg(new LNumber(1))],
 				$node->getArgs()
 			)
 		);
@@ -43,7 +48,7 @@ class AssertionChainTypeSpecifyingExtension implements MethodTypeSpecifyingExten
 
 	public function specifyTypes(
 		MethodReflection $methodReflection,
-		\PhpParser\Node\Expr\MethodCall $node,
+		MethodCall $node,
 		Scope $scope,
 		TypeSpecifierContext $context
 	): SpecifiedTypes
@@ -57,7 +62,7 @@ class AssertionChainTypeSpecifyingExtension implements MethodTypeSpecifyingExten
 		}
 
 		$args = array_merge([
-			new \PhpParser\Node\Arg($calledOnType->getValueExpr()),
+			new Arg($calledOnType->getValueExpr()),
 		], $node->getArgs());
 
 		if (
