@@ -2,11 +2,13 @@
 
 namespace PHPStan\Type\BeberleiAssert;
 
+use PhpParser\Node\Expr\MethodCall;
 use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\MethodReflection;
+use PHPStan\Type\DynamicMethodReturnTypeExtension;
 use PHPStan\Type\Type;
 
-class AssertionChainDynamicReturnTypeExtension implements \PHPStan\Type\DynamicMethodReturnTypeExtension
+class AssertionChainDynamicReturnTypeExtension implements DynamicMethodReturnTypeExtension
 {
 
 	public function getClass(): string
@@ -21,7 +23,7 @@ class AssertionChainDynamicReturnTypeExtension implements \PHPStan\Type\DynamicM
 
 	public function getTypeFromMethodCall(
 		MethodReflection $methodReflection,
-		\PhpParser\Node\Expr\MethodCall $methodCall,
+		MethodCall $methodCall,
 		Scope $scope
 	): Type
 	{

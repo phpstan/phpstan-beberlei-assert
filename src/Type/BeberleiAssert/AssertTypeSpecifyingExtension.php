@@ -10,11 +10,15 @@ use PHPStan\Analyser\TypeSpecifierAwareExtension;
 use PHPStan\Analyser\TypeSpecifierContext;
 use PHPStan\Reflection\MethodReflection;
 use PHPStan\Type\StaticMethodTypeSpecifyingExtension;
+use function array_key_exists;
+use function count;
+use function lcfirst;
+use function substr;
 
 class AssertTypeSpecifyingExtension implements StaticMethodTypeSpecifyingExtension, TypeSpecifierAwareExtension
 {
 
-	/** @var \PHPStan\Analyser\TypeSpecifier */
+	/** @var TypeSpecifier */
 	private $typeSpecifier;
 
 	public function setTypeSpecifier(TypeSpecifier $typeSpecifier): void

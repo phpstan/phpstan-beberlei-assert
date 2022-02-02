@@ -2,9 +2,16 @@
 
 namespace PHPStan\Type\BeberleiAssert;
 
+use PhpParser\Node\Expr\StaticCall;
+use PHPStan\Analyser\Scope;
+use PHPStan\Reflection\MethodReflection;
 use PHPStan\Reflection\ParametersAcceptorSelector;
+use PHPStan\Type\DynamicStaticMethodReturnTypeExtension;
+use PHPStan\Type\Type;
+use function count;
+use function in_array;
 
-class AssertThatDynamicMethodReturnTypeExtension implements \PHPStan\Type\DynamicStaticMethodReturnTypeExtension
+class AssertThatDynamicMethodReturnTypeExtension implements DynamicStaticMethodReturnTypeExtension
 {
 
 	public function getClass(): string
@@ -12,7 +19,7 @@ class AssertThatDynamicMethodReturnTypeExtension implements \PHPStan\Type\Dynami
 		return 'Assert\Assert';
 	}
 
-	public function isStaticMethodSupported(\PHPStan\Reflection\MethodReflection $methodReflection): bool
+	public function isStaticMethodSupported(MethodReflection $methodReflection): bool
 	{
 		return in_array($methodReflection->getName(), [
 			'that',
@@ -21,7 +28,7 @@ class AssertThatDynamicMethodReturnTypeExtension implements \PHPStan\Type\Dynami
 		], true);
 	}
 
-	public function getTypeFromStaticMethodCall(\PHPStan\Reflection\MethodReflection $methodReflection, \PhpParser\Node\Expr\StaticCall $methodCall, \PHPStan\Analyser\Scope $scope): \PHPStan\Type\Type
+	public function getTypeFromStaticMethodCall(MethodReflection $methodReflection, StaticCall $methodCall, Scope $scope): Type
 	{
 		if (count($methodCall->getArgs()) === 0) {
 			return ParametersAcceptorSelector::selectSingle(

@@ -2,21 +2,23 @@
 
 namespace PHPStan\Type\BeberleiAssert;
 
+use PhpParser\Node\Expr;
 use PHPStan\Type\ObjectType;
 use PHPStan\Type\Type;
 use PHPStan\Type\VerbosityLevel;
+use function sprintf;
 
 class AssertThatNullOrType extends ObjectType
 {
 
-	/** @var \PhpParser\Node\Expr */
+	/** @var Expr */
 	private $valueExpr;
 
 	/** @var Type */
 	private $valueType;
 
 	public function __construct(
-		\PhpParser\Node\Expr $valueExpr,
+		Expr $valueExpr,
 		Type $valueType
 	)
 	{
@@ -25,7 +27,7 @@ class AssertThatNullOrType extends ObjectType
 		$this->valueType = $valueType;
 	}
 
-	public function getValueExpr(): \PhpParser\Node\Expr
+	public function getValueExpr(): Expr
 	{
 		return $this->valueExpr;
 	}

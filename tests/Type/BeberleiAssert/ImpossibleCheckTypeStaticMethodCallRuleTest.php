@@ -4,11 +4,12 @@ namespace PHPStan\Type\BeberleiAssert;
 
 use PHPStan\Rules\Comparison\ImpossibleCheckTypeStaticMethodCallRule;
 use PHPStan\Rules\Rule;
+use PHPStan\Testing\RuleTestCase;
 
 /**
- * @extends \PHPStan\Testing\RuleTestCase<ImpossibleCheckTypeStaticMethodCallRule>
+ * @extends RuleTestCase<ImpossibleCheckTypeStaticMethodCallRule>
  */
-class ImpossibleCheckTypeStaticMethodCallRuleTest extends \PHPStan\Testing\RuleTestCase
+class ImpossibleCheckTypeStaticMethodCallRuleTest extends RuleTestCase
 {
 
 	protected function getRule(): Rule

@@ -2,11 +2,16 @@
 
 namespace PHPStan\Type\BeberleiAssert;
 
+use PhpParser\Node\Expr\FuncCall;
 use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\FunctionReflection;
 use PHPStan\Reflection\ParametersAcceptorSelector;
+use PHPStan\Type\DynamicFunctionReturnTypeExtension;
+use PHPStan\Type\Type;
+use function count;
+use function in_array;
 
-class AssertThatFunctionDynamicReturnTypeExtension implements \PHPStan\Type\DynamicFunctionReturnTypeExtension
+class AssertThatFunctionDynamicReturnTypeExtension implements DynamicFunctionReturnTypeExtension
 {
 
 	public function isFunctionSupported(
@@ -22,9 +27,9 @@ class AssertThatFunctionDynamicReturnTypeExtension implements \PHPStan\Type\Dyna
 
 	public function getTypeFromFunctionCall(
 		FunctionReflection $functionReflection,
-		\PhpParser\Node\Expr\FuncCall $functionCall,
+		FuncCall $functionCall,
 		Scope $scope
-	): \PHPStan\Type\Type
+	): Type
 	{
 		if (count($functionCall->getArgs()) === 0) {
 			return ParametersAcceptorSelector::selectSingle(
