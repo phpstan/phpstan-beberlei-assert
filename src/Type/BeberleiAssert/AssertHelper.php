@@ -375,6 +375,20 @@ class AssertHelper
 						[$value]
 					);
 				},
+				'keyExists' => static function (Scope $scope, Arg $array, Arg $key): Expr {
+					return new FuncCall(
+						new Name('array_key_exists'),
+						[$key, $array]
+					);
+				},
+				'keyNotExists' => static function (Scope $scope, Arg $array, Arg $key): Expr {
+					return new BooleanNot(
+						new FuncCall(
+							new Name('array_key_exists'),
+							[$key, $array]
+						)
+					);
+				},
 			];
 		}
 

@@ -111,6 +111,14 @@ class Foo
 
 		Assertion::isJsonString($ac);
 		\PHPStan\Testing\assertType('string', $ac);
+
+		/** @var array{a?: string, b?: int} $ad */
+		$ad = doFoo();
+		Assertion::keyExists($ad, 'a');
+		\PHPStan\Testing\assertType("array{a: string, b?: int}", $ad);
+
+		Assertion::keyNotExists($ad, 'b');
+		\PHPStan\Testing\assertType("array{a: string}", $ad);
 	}
 
 	public function doBar(?int $a, $b, $c, array $d, iterable $e, $g)
