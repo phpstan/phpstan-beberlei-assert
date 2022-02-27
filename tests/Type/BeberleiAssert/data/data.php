@@ -107,7 +107,7 @@ class Foo
 		\PHPStan\Testing\assertType('class-string<PHPStan\Type\BeberleiAssert\Foo>|PHPStan\Type\BeberleiAssert\Foo', $aa);
 
 		Assertion::allSubclassOf($ab, self::class);
-		\PHPStan\Testing\assertType('array<*NEVER*>', $ab); // // should be array<PHPStan\Type\BeberleiAssert\Foo>
+		\PHPStan\Testing\assertType('array<class-string<PHPStan\Type\BeberleiAssert\Foo>|PHPStan\Type\BeberleiAssert\Foo>', $ab);
 
 		Assertion::isJsonString($ac);
 		\PHPStan\Testing\assertType('string', $ac);
