@@ -101,7 +101,7 @@ class Foo
 			$z = [-1, -2, -3];
 		}
 		Assertion::allNotSame($z, -1);
-		\PHPStan\Testing\assertType('array{1, -2|2, -3|3}', $z);
+		\PHPStan\Testing\assertType('array{*NEVER*, -2, -3}|array{1, 2, 3}', $z);
 
 		Assertion::subclassOf($aa, self::class);
 		\PHPStan\Testing\assertType('class-string<PHPStan\Type\BeberleiAssert\Foo>|PHPStan\Type\BeberleiAssert\Foo', $aa);
