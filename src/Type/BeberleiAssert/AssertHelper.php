@@ -24,6 +24,7 @@ use PHPStan\Type\Constant\ConstantArrayTypeBuilder;
 use PHPStan\Type\Constant\ConstantStringType;
 use PHPStan\Type\IterableType;
 use PHPStan\Type\MixedType;
+use PHPStan\Type\NeverType;
 use PHPStan\Type\ObjectType;
 use PHPStan\Type\StringType;
 use PHPStan\Type\Type;
@@ -104,7 +105,7 @@ class AssertHelper
 			reset($sureTypes);
 			$exprString = key($sureTypes);
 			$sureType = $sureTypes[$exprString];
-			return self::arrayOrIterable($typeSpecifier, $scope, $sureType[0], static function () use ($sureType): Type {
+			return self::allArrayOrIterable($typeSpecifier, $scope, $sureType[0], static function () use ($sureType): Type {
 				return $sureType[1];
 			});
 		}
@@ -126,7 +127,7 @@ class AssertHelper
 	): SpecifiedTypes
 	{
 		if ($assertName === 'notNull') {
-			return self::arrayOrIterable(
+			return self::allArrayOrIterable(
 				$typeSpecifier,
 				$scope,
 				$args[0]->value,
@@ -143,7 +144,7 @@ class AssertHelper
 			}
 
 			$objectType = new ObjectType($classType->getValue());
-			return self::arrayOrIterable(
+			return self::allArrayOrIterable(
 				$typeSpecifier,
 				$scope,
 				$args[0]->value,
@@ -155,7 +156,7 @@ class AssertHelper
 
 		if ($assertName === 'notSame') {
 			$valueType = $scope->getType($args[1]->value);
-			return self::arrayOrIterable(
+			return self::allArrayOrIterable(
 				$typeSpecifier,
 				$scope,
 				$args[0]->value,
@@ -168,7 +169,7 @@ class AssertHelper
 		throw new ShouldNotHappenException();
 	}
 
-	private static function arrayOrIterable(
+	private static function allArrayOrIterable(
 		TypeSpecifier $typeSpecifier,
 		Scope $scope,
 		Expr $expr,
@@ -183,18 +184,30 @@ class AssertHelper
 				if ($arrayType instanceof ConstantArrayType) {
 					$builder = ConstantArrayTypeBuilder::createEmpty();
 					foreach ($arrayType->getKeyTypes() as $i => $keyType) {
-						$valueType = $arrayType->getValueTypes()[$i];
-						$builder->setOffsetValueType($keyType, $typeCallback($valueType), $arrayType->isOptionalKey($i));
+						$valueType = $typeCallback($arrayType->getValueTypes()[$i]);
+						if ($valueType instanceof NeverType) {
+							continue 2;
+						}
+						$builder->setOffsetValueType($keyType, $valueType, $arrayType->isOptionalKey($i));
 					}
 					$newArrayTypes[] = $builder->getArray();
 				} else {
-					$newArrayTypes[] = new ArrayType($arrayType->getKeyType(), $typeCallback($arrayType->getItemType()));
+					$itemType = $typeCallback($arrayType->getItemType());
+					if ($itemType instanceof NeverType) {
+						continue;
+					}
+					$newArrayTypes[] = new ArrayType($arrayType->getKeyType(), $itemType);
 				}
 			}
 
 			$specifiedType = TypeCombinator::union(...$newArrayTypes);
 		} elseif ((new IterableType(new MixedType(), new MixedType()))->isSuperTypeOf($currentType)->yes()) {
-			$specifiedType = new IterableType($currentType->getIterableKeyType(), $typeCallback($currentType->getIterableValueType()));
+			$itemType = $typeCallback($currentType->getIterableValueType());
+			if ($itemType instanceof NeverType) {
+				$specifiedType = $itemType;
+			} else {
+				$specifiedType = new IterableType($currentType->getIterableKeyType(), $itemType);
+			}
 		} else {
 			return new SpecifiedTypes([], []);
 		}

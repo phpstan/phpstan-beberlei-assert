@@ -83,6 +83,16 @@ class Foo
 		Assertion::allNotNull($w);
 		\PHPStan\Testing\assertType('array<int>', $w);
 
+		/** @var null[] $w */
+		$w = doFoo();
+		Assertion::allNotNull($w);
+		\PHPStan\Testing\assertType('*NEVER*', $w);
+
+		/** @var iterable<null> $w */
+		$w = doFoo();
+		Assertion::allNotNull($w);
+		\PHPStan\Testing\assertType('*NEVER*', $w);
+
 		/** @var array{baz: float|null}|array{foo?: string|null, bar: int|null} $w */
 		$w = doFoo();
 		Assertion::allNotNull($w);
@@ -106,7 +116,11 @@ class Foo
 			$z = [-1, -2, -3];
 		}
 		Assertion::allNotSame($z, -1);
-		\PHPStan\Testing\assertType('array{*NEVER*, -2, -3}|array{1, 2, 3}', $z);
+		\PHPStan\Testing\assertType('array{1, 2, 3}', $z);
+
+		$z = [-1, -2, -3];
+		Assertion::allNotSame($z, -1);
+		\PHPStan\Testing\assertType('*NEVER*', $z);
 
 		Assertion::subclassOf($aa, self::class);
 		\PHPStan\Testing\assertType('class-string<PHPStan\Type\BeberleiAssert\Foo>|PHPStan\Type\BeberleiAssert\Foo', $aa);
