@@ -83,6 +83,11 @@ class Foo
 		Assertion::allNotNull($w);
 		\PHPStan\Testing\assertType('array<int>', $w);
 
+		/** @var array{baz: float|null}|array{foo?: string|null, bar: int|null} $w */
+		$w = doFoo();
+		Assertion::allNotNull($w);
+		\PHPStan\Testing\assertType('array{baz: float}|array{foo?: string, bar: int}', $w);
+
 		Assertion::same($x, 1);
 		\PHPStan\Testing\assertType('1', $x);
 

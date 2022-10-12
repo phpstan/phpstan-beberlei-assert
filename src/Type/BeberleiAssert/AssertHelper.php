@@ -28,7 +28,6 @@ use PHPStan\Type\ObjectType;
 use PHPStan\Type\StringType;
 use PHPStan\Type\Type;
 use PHPStan\Type\TypeCombinator;
-use PHPStan\Type\TypeUtils;
 use ReflectionObject;
 use function array_key_exists;
 use function count;
@@ -177,7 +176,7 @@ class AssertHelper
 	): SpecifiedTypes
 	{
 		$currentType = TypeCombinator::intersect($scope->getType($expr), new IterableType(new MixedType(), new MixedType()));
-		$arrayTypes = TypeUtils::getArrays($currentType);
+		$arrayTypes = $currentType->getArrays();
 		if (count($arrayTypes) > 0) {
 			$newArrayTypes = [];
 			foreach ($arrayTypes as $arrayType) {
@@ -185,7 +184,7 @@ class AssertHelper
 					$builder = ConstantArrayTypeBuilder::createEmpty();
 					foreach ($arrayType->getKeyTypes() as $i => $keyType) {
 						$valueType = $arrayType->getValueTypes()[$i];
-						$builder->setOffsetValueType($keyType, $typeCallback($valueType));
+						$builder->setOffsetValueType($keyType, $typeCallback($valueType), $arrayType->isOptionalKey($i));
 					}
 					$newArrayTypes[] = $builder->getArray();
 				} else {
