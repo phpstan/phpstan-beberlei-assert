@@ -23,6 +23,7 @@ class ImpossibleCheckTypeMethodCallRuleTest extends RuleTestCase
 			[
 				'Call to method Assert\AssertionChain::string() will always evaluate to true.',
 				12,
+				'Because the type is coming from a PHPDoc, you can turn off this check by setting <fg=cyan>treatPhpDocTypesAsCertain: false</> in your <fg=cyan>%configurationFile%</>.',
 			],
 			[
 				'Call to method Assert\AssertionChain::string() will always evaluate to true.',
