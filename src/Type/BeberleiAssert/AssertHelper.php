@@ -19,9 +19,7 @@ use PHPStan\Analyser\TypeSpecifier;
 use PHPStan\Analyser\TypeSpecifierContext;
 use PHPStan\ShouldNotHappenException;
 use PHPStan\Type\ArrayType;
-use PHPStan\Type\Constant\ConstantArrayType;
 use PHPStan\Type\Constant\ConstantArrayTypeBuilder;
-use PHPStan\Type\Constant\ConstantStringType;
 use PHPStan\Type\IterableType;
 use PHPStan\Type\MixedType;
 use PHPStan\Type\NeverType;
@@ -139,11 +137,12 @@ class AssertHelper
 
 		if ($assertName === 'notIsInstanceOf') {
 			$classType = $scope->getType($args[1]->value);
-			if (!$classType instanceof ConstantStringType) {
+			$constantStrings = $classType->getConstantStrings();
+			if (count($constantStrings) !== 1) {
 				return new SpecifiedTypes([], []);
 			}
 
-			$objectType = new ObjectType($classType->getValue());
+			$objectType = new ObjectType($constantStrings[0]->getValue());
 			return self::allArrayOrIterable(
 				$typeSpecifier,
 				$scope,
@@ -181,14 +180,15 @@ class AssertHelper
 		if (count($arrayTypes) > 0) {
 			$newArrayTypes = [];
 			foreach ($arrayTypes as $arrayType) {
-				if ($arrayType instanceof ConstantArrayType) {
+				$constantArrays = $arrayType->getConstantArrays();
+				if (count($constantArrays) === 1) {
 					$builder = ConstantArrayTypeBuilder::createEmpty();
-					foreach ($arrayType->getKeyTypes() as $i => $keyType) {
-						$valueType = $typeCallback($arrayType->getValueTypes()[$i]);
+					foreach ($constantArrays[0]->getKeyTypes() as $i => $keyType) {
+						$valueType = $typeCallback($constantArrays[0]->getValueTypes()[$i]);
 						if ($valueType instanceof NeverType) {
 							continue 2;
 						}
-						$builder->setOffsetValueType($keyType, $valueType, $arrayType->isOptionalKey($i));
+						$builder->setOffsetValueType($keyType, $valueType, $constantArrays[0]->isOptionalKey($i));
 					}
 					$newArrayTypes[] = $builder->getArray();
 				} else {
@@ -308,25 +308,27 @@ class AssertHelper
 				},
 				'isInstanceOf' => static function (Scope $scope, Arg $expr, Arg $class): ?Expr {
 					$classType = $scope->getType($class->value);
-					if (!$classType instanceof ConstantStringType) {
+					$constantStrings = $classType->getConstantStrings();
+					if (count($constantStrings) !== 1) {
 						return null;
 					}
 
 					return new Instanceof_(
 						$expr->value,
-						new Name($classType->getValue())
+						new Name($constantStrings[0]->getValue())
 					);
 				},
 				'notIsInstanceOf' => static function (Scope $scope, Arg $expr, Arg $class): ?Expr {
 					$classType = $scope->getType($class->value);
-					if (!$classType instanceof ConstantStringType) {
+					$constantStrings = $classType->getConstantStrings();
+					if (count($constantStrings) !== 1) {
 						return null;
 					}
 
 					return new BooleanNot(
 						new Instanceof_(
 							$expr->value,
-							new Name($classType->getValue())
+							new Name($constantStrings[0]->getValue())
 						)
 					);
 				},
