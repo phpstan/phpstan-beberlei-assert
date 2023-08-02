@@ -5,6 +5,8 @@ namespace PHPStan\Type\BeberleiAssert;
 use Closure;
 use PhpParser\Node\Arg;
 use PhpParser\Node\Expr;
+use PhpParser\Node\Expr\Array_;
+use PhpParser\Node\Expr\BinaryOp\BooleanAnd;
 use PhpParser\Node\Expr\BinaryOp\BooleanOr;
 use PhpParser\Node\Expr\BinaryOp\Identical;
 use PhpParser\Node\Expr\BinaryOp\NotIdentical;
@@ -13,6 +15,7 @@ use PhpParser\Node\Expr\ConstFetch;
 use PhpParser\Node\Expr\FuncCall;
 use PhpParser\Node\Expr\Instanceof_;
 use PhpParser\Node\Name;
+use PhpParser\Node\Scalar\String_;
 use PHPStan\Analyser\Scope;
 use PHPStan\Analyser\SpecifiedTypes;
 use PHPStan\Analyser\TypeSpecifier;
@@ -400,6 +403,30 @@ class AssertHelper
 						new FuncCall(
 							new Name('array_key_exists'),
 							[$key, $array]
+						)
+					);
+				},
+				'notBlank' => static function (Scope $scope, Arg $value): Expr {
+					return new BooleanAnd(
+						new BooleanAnd(
+							new NotIdentical(
+								$value->value,
+								new ConstFetch(new Name('null'))
+							),
+							new NotIdentical(
+								$value->value,
+								new ConstFetch(new Name('false'))
+							)
+						),
+						new BooleanAnd(
+							new NotIdentical(
+								$value->value,
+								new String_('')
+							),
+							new NotIdentical(
+								$value->value,
+								new Array_()
+							)
 						)
 					);
 				},

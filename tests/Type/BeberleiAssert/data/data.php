@@ -7,7 +7,7 @@ use Assert\{Assert, Assertion};
 class Foo
 {
 
-	public function doFoo($a, $b, array $c, iterable $d, $e, $f, $g, $h, $i, $j, $k, $l, $m, string $n, $p, $r, $s, ?int $t, ?int $u, $x, $aa, array $ab, ?string $ac)
+	public function doFoo($a, $b, array $c, iterable $d, $e, $f, $g, $h, $i, $j, $k, $l, $m, string $n, $p, $r, $s, ?int $t, ?int $u, $x, $aa, array $ab, ?string $ac, ?string $ae, ?bool $af, array $ag)
 	{
 		\PHPStan\Testing\assertType('mixed', $a);
 
@@ -138,6 +138,15 @@ class Foo
 
 		Assertion::keyNotExists($ad, 'b');
 		\PHPStan\Testing\assertType("array{a: string}", $ad);
+
+		Assertion::notBlank($ae);
+		\PHPStan\Testing\assertType('non-empty-string', $ae);
+
+		Assertion::notBlank($af);
+		\PHPStan\Testing\assertType('true', $af);
+
+		Assertion::notBlank($ag);
+		\PHPStan\Testing\assertType('non-empty-array', $ag);
 	}
 
 	public function doBar(?int $a, $b, $c, array $d, iterable $e, $g)
