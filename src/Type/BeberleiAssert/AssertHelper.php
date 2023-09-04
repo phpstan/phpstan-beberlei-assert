@@ -22,14 +22,19 @@ use PHPStan\Analyser\TypeSpecifier;
 use PHPStan\Analyser\TypeSpecifierContext;
 use PHPStan\ShouldNotHappenException;
 use PHPStan\Type\ArrayType;
+use PHPStan\Type\Constant\ConstantArrayType;
 use PHPStan\Type\Constant\ConstantArrayTypeBuilder;
+use PHPStan\Type\Constant\ConstantBooleanType;
+use PHPStan\Type\Constant\ConstantStringType;
 use PHPStan\Type\IterableType;
 use PHPStan\Type\MixedType;
 use PHPStan\Type\NeverType;
+use PHPStan\Type\NullType;
 use PHPStan\Type\ObjectType;
 use PHPStan\Type\StringType;
 use PHPStan\Type\Type;
 use PHPStan\Type\TypeCombinator;
+use PHPStan\Type\UnionType;
 use ReflectionObject;
 use function array_key_exists;
 use function count;
@@ -164,6 +169,25 @@ class AssertHelper
 				$args[0]->value,
 				static function (Type $type) use ($valueType): Type {
 					return TypeCombinator::remove($type, $valueType);
+				}
+			);
+		}
+
+		if ($assertName === 'notBlank') {
+			return self::allArrayOrIterable(
+				$typeSpecifier,
+				$scope,
+				$args[0]->value,
+				static function (Type $type): Type {
+					return TypeCombinator::remove(
+						$type,
+						new UnionType([
+							new NullType(),
+							new ConstantBooleanType(false),
+							new ConstantStringType(''),
+							new ConstantArrayType([], []),
+						])
+					);
 				}
 			);
 		}

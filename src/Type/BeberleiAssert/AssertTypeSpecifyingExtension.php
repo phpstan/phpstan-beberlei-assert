@@ -42,6 +42,7 @@ class AssertTypeSpecifyingExtension implements StaticMethodTypeSpecifyingExtensi
 				'allNotIsInstanceOf' => 2,
 				'allNotNull' => 1,
 				'allNotSame' => 2,
+				'allNotBlank' => 1,
 			];
 			return array_key_exists($staticMethodReflection->getName(), $methods)
 				&& count($node->getArgs()) >= $methods[$staticMethodReflection->getName()];
