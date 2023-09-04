@@ -147,6 +147,11 @@ class Foo
 
 		Assertion::notBlank($ag);
 		\PHPStan\Testing\assertType('non-empty-array', $ag);
+
+		/** @var (string|null|bool|array)[] $notBlankValues */
+		$notBlankValues = doFoo();
+		Assertion::allNotBlank($notBlankValues);
+		\PHPStan\Testing\assertType('array<non-empty-array|non-empty-string|true>', $notBlankValues);
 	}
 
 	public function doBar(?int $a, $b, $c, array $d, iterable $e, $g)
@@ -182,6 +187,11 @@ class Foo
 		$f = doFoo();
 		Assert::thatAll($f)->notNull();
 		\PHPStan\Testing\assertType('array<string>', $f);
+
+		/** @var (string|null|bool|array)[] $notBlankValues */
+		$notBlankValues = doFoo();
+		Assert::thatAll($notBlankValues)->notBlank();
+		\PHPStan\Testing\assertType('array<non-empty-array|non-empty-string|true>', $notBlankValues);
 
 		$assertThatFunction = \Assert\that($g);
 		\PHPStan\Testing\assertType('Assert\AssertionChain<mixed>', $assertThatFunction);
