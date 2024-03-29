@@ -9,7 +9,7 @@
 
 ## Description
 
-The main scope of this extension is to help phpstan to detect the type of object after the `Assert\Assertion` validation.
+The main scope of this extension is to help PHPStan to detect the type of object after the `Assert\Assertion` validation.
 
 ```php
 <?php declare(strict_types = 1);
@@ -19,44 +19,11 @@ function demo(?int $a) {
 	// ...
 
 	Assertion::integer($a);
-	// phpstan is now aware that $a can no longer be `null` at this point
+	// PHPStan is now aware that $a can no longer be `null` at this point
 
 	return ($a === 10);
 }
 ```
-
-This extension specifies types of values passed to:
-
-* `Assertion::integer`
-* `Assertion::integerish`
-* `Assertion::string`
-* `Assertion::float`
-* `Assertion::numeric`
-* `Assertion::boolean`
-* `Assertion::scalar`
-* `Assertion::objectOrClass`
-* `Assertion::isResource`
-* `Assertion::isCallable`
-* `Assertion::isArray`
-* `Assertion::isInstanceOf`
-* `Assertion::notIsInstanceOf`
-* `Assertion::subclassOf`
-* `Assertion::true`
-* `Assertion::false`
-* `Assertion::null`
-* `Assertion::notNull`
-* `Assertion::same`
-* `Assertion::notSame`
-* `Assertion::isJsonString`
-* `Assertion::keyExists`
-* `Assertion::keyNotExists`
-* `Assertion::notBlank`
-* `nullOr*` and `all*` variants of the above methods
-
-`Assert::that`, `Assert::thatNullOr` and `Assert::thatAll` chaining methods are also supported.
-
-`Assert\that`, `Assert\thatNullOr` and `Assert\thatAll` functions are supported too.
-
 
 ## Installation
 
