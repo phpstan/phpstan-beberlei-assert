@@ -129,7 +129,7 @@ class Foo
 		\PHPStan\Testing\assertType('array<class-string<PHPStan\Type\BeberleiAssert\Foo>|PHPStan\Type\BeberleiAssert\Foo>', $ab);
 
 		Assertion::isJsonString($ac);
-		\PHPStan\Testing\assertType('string', $ac);
+		\PHPStan\Testing\assertType('non-empty-string', $ac);
 
 		/** @var array{a?: string, b?: int} $ad */
 		$ad = doFoo();

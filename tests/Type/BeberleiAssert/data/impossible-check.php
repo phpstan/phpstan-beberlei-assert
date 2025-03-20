@@ -16,4 +16,12 @@ class Bar
 		Assert::that($strings)->all()->string();
 	}
 
+	public function nonEmptyStringAndSomethingUnknownNarrow(string $a, array $b): void
+	{
+		Assert::that($a)->isJsonString();
+		Assert::that($a)->isJsonString(); // only this should report
+
+		Assert::thatAll($b)->isJsonString();
+		Assert::thatAll($b)->isJsonString(); // only this should report
+	}
 }

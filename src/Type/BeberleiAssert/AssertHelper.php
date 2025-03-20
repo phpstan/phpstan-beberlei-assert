@@ -38,6 +38,7 @@ use PHPStan\Type\UnionType;
 use ReflectionObject;
 use function array_key_exists;
 use function count;
+use function is_array;
 use function key;
 use function reset;
 
@@ -62,7 +63,7 @@ class AssertHelper
 		}
 
 		$resolver = $resolvers[$assertName];
-		$resolverReflection = new ReflectionObject($resolver);
+		$resolverReflection = new ReflectionObject(Closure::fromCallable($resolver));
 
 		return count($args) >= count($resolverReflection->getMethod('__invoke')->getParameters()) - 1;
 	}
@@ -78,7 +79,7 @@ class AssertHelper
 		bool $nullOr
 	): SpecifiedTypes
 	{
-		$expression = self::createExpression($scope, $assertName, $args);
+		[$expression, $rootExpr] = self::createExpression($scope, $assertName, $args);
 		if ($expression === null) {
 			return new SpecifiedTypes([], []);
 		}
@@ -93,11 +94,13 @@ class AssertHelper
 			);
 		}
 
-		return $typeSpecifier->specifyTypesInCondition(
+		$specifiedTypes = $typeSpecifier->specifyTypesInCondition(
 			$scope,
 			$expression,
 			TypeSpecifierContext::createTruthy(),
-		);
+		)->setRootExpr($rootExpr ?? $expression);
+
+		return self::specifyRootExprIfSet($rootExpr, $scope, $specifiedTypes, $typeSpecifier);
 	}
 
 	public static function handleAll(
@@ -239,21 +242,34 @@ class AssertHelper
 
 	/**
 	 * @param Arg[] $args
+	 * @return array{?Expr, ?Expr}
 	 */
 	private static function createExpression(
 		Scope $scope,
 		string $assertName,
 		array $args
-	): ?Expr
+	): array
 	{
 		$resolvers = self::getExpressionResolvers();
 		$resolver = $resolvers[$assertName];
 
-		return $resolver($scope, ...$args);
+		$resolverResult = $resolver($scope, ...$args);
+		if (is_array($resolverResult)) {
+			[$expr, $rootExpr] = $resolverResult;
+		} else {
+			$expr = $resolverResult;
+			$rootExpr = null;
+		}
+
+		if ($expr === null) {
+			return [null, null];
+		}
+
+		return [$expr, $rootExpr];
 	}
 
 	/**
-	 * @return Closure[]
+	 * @return array<string, callable(Scope, Arg...): (Expr|array{?Expr, ?Expr}|null)>
 	 */
 	private static function getExpressionResolvers(): array
 	{
@@ -363,10 +379,6 @@ class AssertHelper
 						$class,
 					],
 				),
-				'isJsonString' => static fn (Scope $scope, Arg $value): Expr => new FuncCall(
-					new Name('is_string'),
-					[$value],
-				),
 				'integerish' => static fn (Scope $scope, Arg $value): Expr => new FuncCall(
 					new Name('is_numeric'),
 					[$value],
@@ -406,7 +418,51 @@ class AssertHelper
 			];
 		}
 
+		$assertionsResultingAtLeastInNonEmptyString = [
+			'isJsonString',
+		];
+		foreach ($assertionsResultingAtLeastInNonEmptyString as $name) {
+			self::$resolvers[$name] = static fn (Scope $scope, Arg $value): array => self::createIsNonEmptyStringAndSomethingExprPair($name, [$value]);
+		}
+
 		return self::$resolvers;
+	}
+
+	/**
+	 * @param Arg[] $args
+	 * @return array{Expr, Expr}
+	 */
+	private static function createIsNonEmptyStringAndSomethingExprPair(string $name, array $args): array
+	{
+		$expr = new BooleanAnd(
+			new FuncCall(
+				new Name('is_string'),
+				[$args[0]],
+			),
+			new NotIdentical(
+				$args[0]->value,
+				new String_(''),
+			),
+		);
+
+		$rootExpr = new BooleanAnd(
+			$expr,
+			new FuncCall(new Name('FAUX_FUNCTION_ ' . $name), $args),
+		);
+
+		return [$expr, $rootExpr];
+	}
+
+	private static function specifyRootExprIfSet(?Expr $rootExpr, Scope $scope, SpecifiedTypes $specifiedTypes, TypeSpecifier $typeSpecifier): SpecifiedTypes
+	{
+		if ($rootExpr === null) {
+			return $specifiedTypes;
+		}
+
+		// Makes consecutive calls with a rootExpr adding unknown info via FAUX_FUNCTION evaluate to true
+		return $specifiedTypes->unionWith(
+			$typeSpecifier->create($rootExpr, new ConstantBooleanType(true), TypeSpecifierContext::createTruthy(), $scope),
+		);
 	}
 
 }
