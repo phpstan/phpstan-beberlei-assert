@@ -393,6 +393,10 @@ class AssertHelper
 						[$key, $array],
 					),
 				),
+				'propertyExists' => static fn (Scope $scope, Arg $object, Arg $property): Expr => new FuncCall(
+					new Name('property_exists'),
+					[$object, $property],
+				),
 				'notBlank' => static fn (Scope $scope, Arg $value): Expr => new BooleanAnd(
 					new BooleanAnd(
 						new NotIdentical(
