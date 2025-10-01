@@ -397,9 +397,9 @@ class AssertHelper
 					new Name('property_exists'),
 					[$object, $property],
 				),
-				'methodExists' => static fn (Scope $scope, Arg $object, Arg $property): Expr => new FuncCall(
+				'methodExists' => static fn (Scope $scope, Arg $object, Arg $method): Expr => new FuncCall(
 					new Name('method_exists'),
-					[$object, $property],
+					[$object, $method],
 				),
 				'classExists' => static fn (Scope $scope, Arg $value): Expr => new FuncCall(
 					new Name('class_exists'),
