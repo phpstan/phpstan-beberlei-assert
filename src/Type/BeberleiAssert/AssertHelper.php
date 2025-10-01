@@ -401,6 +401,14 @@ class AssertHelper
 					new Name('method_exists'),
 					[$object, $property],
 				),
+				'classExists' => static fn (Scope $scope, Arg $value): Expr => new FuncCall(
+					new Name('class_exists'),
+					[$value],
+				),
+				'interfaceExists' => static fn (Scope $scope, Arg $value): Expr => new FuncCall(
+					new Name('interface_exists'),
+					[$value],
+				),
 				'notBlank' => static fn (Scope $scope, Arg $value): Expr => new BooleanAnd(
 					new BooleanAnd(
 						new NotIdentical(
