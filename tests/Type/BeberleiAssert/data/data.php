@@ -44,6 +44,9 @@ class Foo
 		Assertion::propertyExists($j, 'foo');
 		\PHPStan\Testing\assertType('object&hasProperty(foo)', $j);
 
+		Assertion::methodExists($j, 'doBar');
+		\PHPStan\Testing\assertType('object&hasMethod(doBar)&hasProperty(foo)', $j);
+
 		Assertion::isResource($k);
 		\PHPStan\Testing\assertType('resource', $k);
 
