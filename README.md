@@ -25,6 +25,47 @@ function demo(?int $a) {
 }
 ```
 
+## Supported Assertions
+
+This extension understands the following `Assertion` static methods and narrows types accordingly:
+
+`integer`, `string`, `float`, `numeric`, `boolean`, `scalar`, `objectOrClass`, `isResource`, `isCallable`, `isArray`, `isInstanceOf`, `notIsInstanceOf`, `true`, `false`, `null`, `notNull`, `same`, `notSame`, `subclassOf`, `integerish`, `keyExists`, `keyNotExists`, `propertyExists`, `methodExists`, `classExists`, `interfaceExists`, `notBlank`, `isJsonString`
+
+### `nullOr*` Prefix
+
+Every supported assertion can be prefixed with `nullOr` to accept `null` in addition to the asserted type:
+
+```php
+Assertion::nullOrString($value);
+// $value is string|null
+```
+
+### `all*` Prefix
+
+Every supported assertion can be prefixed with `all` to narrow the item type of arrays and iterables:
+
+```php
+/** @var mixed[] $values */
+Assertion::allInteger($values);
+// $values is array<int>
+```
+
+The `allNot*` prefix is also supported for `allNotNull`, `allNotIsInstanceOf`, `allNotSame`, and `allNotBlank`.
+
+### Fluent Chain API
+
+The extension supports `Assert::that()` chains including `->nullOr()` and `->all()` modifiers:
+
+```php
+Assert::that($value)->string();
+Assert::that($value)->nullOr()->string(); // string|null
+Assert::thatNullOr($value)->string();     // string|null
+Assert::that($values)->all()->string();   // array<string>
+Assert::thatAll($values)->string();       // array<string>
+```
+
+The function-style API (`Assert\that()`, `Assert\thatNullOr()`, `Assert\thatAll()`) is also supported.
+
 ## Installation
 
 To use this extension, require it in [Composer](https://getcomposer.org/):
