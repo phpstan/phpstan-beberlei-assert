@@ -269,7 +269,7 @@ class AssertHelper
 	}
 
 	/**
-	 * @return array<string, callable(Scope, Arg...): (Expr|array{?Expr, ?Expr}|null)>
+	 * @return array<string, callable(Scope, Arg, Arg...): (Expr|array{?Expr, ?Expr}|null)>
 	 */
 	private static function getExpressionResolvers(): array
 	{
