@@ -79,7 +79,7 @@ class AssertHelper
 		bool $nullOr
 	): SpecifiedTypes
 	{
-		[$expression, $rootExpr] = self::createExpression($scope, $assertName, $args);
+		[$expression, $isEquality] = self::createExpression($scope, $assertName, $args);
 		if ($expression === null) {
 			return new SpecifiedTypes([], []);
 		}
@@ -98,9 +98,12 @@ class AssertHelper
 			$scope,
 			$expression,
 			TypeSpecifierContext::createTruthy(),
-		)->setRootExpr($rootExpr ?? $expression);
+		);
+		if ($isEquality) {
+			$specifiedTypes = $specifiedTypes->setEquality();
+		}
 
-		return self::specifyRootExprIfSet($rootExpr, $scope, $specifiedTypes, $typeSpecifier);
+		return $specifiedTypes;
 	}
 
 	public static function handleAll(
@@ -242,7 +245,7 @@ class AssertHelper
 
 	/**
 	 * @param Arg[] $args
-	 * @return array{?Expr, ?Expr}
+	 * @return array{?Expr, bool}
 	 */
 	private static function createExpression(
 		Scope $scope,
@@ -255,21 +258,21 @@ class AssertHelper
 
 		$resolverResult = $resolver($scope, ...$args);
 		if (is_array($resolverResult)) {
-			[$expr, $rootExpr] = $resolverResult;
+			[$expr, $isEquality] = $resolverResult;
 		} else {
 			$expr = $resolverResult;
-			$rootExpr = null;
+			$isEquality = false;
 		}
 
 		if ($expr === null) {
-			return [null, null];
+			return [null, false];
 		}
 
-		return [$expr, $rootExpr];
+		return [$expr, $isEquality];
 	}
 
 	/**
-	 * @return array<string, callable(Scope, Arg, Arg...): (Expr|array{?Expr, ?Expr}|null)>
+	 * @return array<string, callable(Scope, Arg, Arg...): (Expr|array{?Expr, bool}|null)>
 	 */
 	private static function getExpressionResolvers(): array
 	{
@@ -438,47 +441,22 @@ class AssertHelper
 			'isJsonString',
 		];
 		foreach ($assertionsResultingAtLeastInNonEmptyString as $name) {
-			self::$resolvers[$name] = static fn (Scope $scope, Arg $value): array => self::createIsNonEmptyStringAndSomethingExprPair($name, [$value]);
+			self::$resolvers[$name] = static fn (Scope $scope, Arg $value): array => [
+				new BooleanAnd(
+					new FuncCall(
+						new Name('is_string'),
+						[$value],
+					),
+					new NotIdentical(
+						$value->value,
+						new String_(''),
+					),
+				),
+				true,
+			];
 		}
 
 		return self::$resolvers;
-	}
-
-	/**
-	 * @param Arg[] $args
-	 * @return array{Expr, Expr}
-	 */
-	private static function createIsNonEmptyStringAndSomethingExprPair(string $name, array $args): array
-	{
-		$expr = new BooleanAnd(
-			new FuncCall(
-				new Name('is_string'),
-				[$args[0]],
-			),
-			new NotIdentical(
-				$args[0]->value,
-				new String_(''),
-			),
-		);
-
-		$rootExpr = new BooleanAnd(
-			$expr,
-			new FuncCall(new Name('FAUX_FUNCTION_ ' . $name), $args),
-		);
-
-		return [$expr, $rootExpr];
-	}
-
-	private static function specifyRootExprIfSet(?Expr $rootExpr, Scope $scope, SpecifiedTypes $specifiedTypes, TypeSpecifier $typeSpecifier): SpecifiedTypes
-	{
-		if ($rootExpr === null) {
-			return $specifiedTypes;
-		}
-
-		// Makes consecutive calls with a rootExpr adding unknown info via FAUX_FUNCTION evaluate to true
-		return $specifiedTypes->unionWith(
-			$typeSpecifier->create($rootExpr, new ConstantBooleanType(true), TypeSpecifierContext::createTruthy(), $scope),
-		);
 	}
 
 }
