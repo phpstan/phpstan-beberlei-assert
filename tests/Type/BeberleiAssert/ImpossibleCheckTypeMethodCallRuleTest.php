@@ -33,8 +33,7 @@ class ImpossibleCheckTypeMethodCallRuleTest extends RuleTestCase
 			[
 				'Call to method Assert\AssertionChain::isJsonString() will always evaluate to true.',
 				22,
-				'• Because the type is coming from a PHPDoc, you can turn off this check by setting <fg=cyan>treatPhpDocTypesAsCertain: false</> in your <fg=cyan>%configurationFile%</>.
-• If Assert\AssertionChain::isJsonString() is impure, add <fg=cyan>@phpstan-impure</> PHPDoc tag above its declaration. Learn more: <fg=cyan>https://phpstan.org/blog/remembering-and-forgetting-returned-values</>',
+				'Because the type is coming from a PHPDoc, you can turn off this check by setting <fg=cyan>treatPhpDocTypesAsCertain: false</> in your <fg=cyan>%configurationFile%</>.',
 			],
 			[
 				'Call to method Assert\AssertionChain::isJsonString() will always evaluate to true.',
