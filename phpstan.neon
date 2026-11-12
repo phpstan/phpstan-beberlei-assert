@@ -7,5 +7,12 @@ includes:
 	- phpstan-baseline.neon
 
 parameters:
+	level: 8
+	resultCachePath: tmp/resultCache.php
+
+	paths:
+		- src
+		- tests
+
 	excludePaths:
 		- tests/*/data/*
